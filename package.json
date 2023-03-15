@@ -1,0 +1,32 @@
+{
+  "name": "labecommerce-backend",
+  "version": "1.0.0",
+  "description": "Jaziel",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node ./build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jazisnow/labecommerce-backend.git"
+  },
+  "author": "jaziel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jazisnow/labecommerce-backend/issues"
+  },
+  "homepage": "https://github.com/jazisnow/labecommerce-backend#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.14.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}
