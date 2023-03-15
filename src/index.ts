@@ -8,7 +8,7 @@ import cors from 'cors';
 
 
 console.table(user)
-// console.table(product)
+console.table(product)
 // console.table(purchase)
 
 // //exemplo de chamada: createUser("u003", "beltrano@email.com", "beltrano99")
