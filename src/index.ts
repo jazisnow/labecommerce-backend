@@ -138,7 +138,7 @@ app.get("/user/:id/purchase", (req: Request, res: Response)=>{
     res.status(200).send(result)
 })
 
-//Exercício 02
+//Exercício 002
 //findIndex retorna apenas o valor do index 
 //ao contrario do find que retorna {} inteiro
 //splice remove numeros especificos de um []
