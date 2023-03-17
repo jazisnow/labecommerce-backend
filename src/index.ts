@@ -8,12 +8,12 @@ import cors from 'cors';
 import path from 'path';
 
 
-//console.table(user)
-// console.table(product)
-// console.table(purchase)
+console.table(user)
+console.table(product)
+console.table(purchase)
 
 // //exemplo de chamada: createUser("u003", "beltrano@email.com", "beltrano99")
-//console.table(createUser("u003", "beltrano@email.com", "beltrano99"))
+console.table(createUser("u003", "beltrano@email.com", "beltrano99"))
 
 // // exemplo de chamada: getAllUsers()
 //console.table(getAllUsers())
