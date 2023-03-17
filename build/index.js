@@ -4,18 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("./database");
-const types_1 = require("./types");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-console.table(database_1.user);
-console.table((0, database_1.createUser)("u003", "beltrano@email.com", "beltrano99"));
-console.table((0, database_1.getAllUsers)());
-console.table((0, database_1.createProduct)("p004", "Monitor HD", 800, types_1.ProductCategory.ELECTRONICS));
-console.table((0, database_1.getAllProducts)());
-console.table((0, database_1.getProductById)("p004"));
-console.table((0, database_1.queryProductsByName)("pla"));
-console.table((0, database_1.createPurchase)("u003", "p004", 2, 1600));
-console.table((0, database_1.getAllPurchasesFromUserId)("u003"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 -app.use((0, cors_1.default)());
@@ -75,5 +65,29 @@ app.post('/purchases', (req, res) => {
     };
     database_1.purchase.push(newPurchase);
     res.status(201).send("Compra realizada com sucesso");
+});
+app.get("/product/:id", (req, res) => {
+    const id = req.params.id;
+    const result = database_1.product.find((item) => item.id === id);
+    res.status(200).send("objeto product encontrado");
+});
+app.get("/user/:id/purchase", (req, res) => {
+    const userId = req.params.id;
+    const result = database_1.purchase.find((item) => item.userId === userId);
+    res.status(200).send(result);
+});
+app.delete("/user/:id", (req, res) => {
+    const id = req.params.id;
+    const index = database_1.user.findIndex((item) => item.id === id);
+    database_1.user.splice(index, 1);
+    console.log(database_1.user);
+    res.status(200).send("User apagado com sucesso");
+});
+app.delete("/product/:id", (req, res) => {
+    const id = req.params.id;
+    const index = database_1.product.findIndex((item) => item.id === id);
+    database_1.user.splice(index, 1);
+    console.log(database_1.product);
+    res.status(200).send("User apagado com sucesso");
 });
 //# sourceMappingURL=index.js.map
