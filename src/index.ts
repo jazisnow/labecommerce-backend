@@ -477,7 +477,7 @@ app.post("/purchases", async (req: Request, res: Response) =>{
     `)
     if (idExist.length) {
         res.status(400);
-        throw new Error("Já existe um um produto com esse id");
+        throw new Error("Já existe um compra com esse id");
     }
     const newPuchases = await db.raw(`
     INSERT INTO purchases(id, buyer, totalPrice, paid)
@@ -495,7 +495,7 @@ app.get("/users/:id/purchases", async (req: Request, res: Response) => {
     const purchases = await db("purchases").select("*").where({ user_id: id });
         res.status(200).send(purchases);
     } catch (error) {
-        res.status(500).send({ message: "Erro ao buscar as compras do usuário" });
+        res.status(500).send({ message: "Erro ao buscar as compras do usuário!" });
     }
 });
 
