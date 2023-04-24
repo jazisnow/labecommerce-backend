@@ -1,21 +1,26 @@
 
 export type TUser = {
     id: string,
+    name: string,
     email: string,
-    password: string
+    password: string,
+    date: number
 }
 export type TProduct = {
     id:string,
     name:string,
     price:number,
-    category:string
+    description:string,
+    imageUrl:string
 }
 export type TPurchase = {
-    userId:string,
-    productId:string,
-    quantity:number,
-    totalPrice:number
+    id:string,
+    buyer:string,
+    totalPrice:number,
+    createdAt:number,
+    paid: boolean
 }
+
 
 // utilize um enum para definir pelo menos 3 categorias (você pode escolher, mas deixamos alguns exemplos abaixo)
 // ACCESSORIES = "Acessórios",

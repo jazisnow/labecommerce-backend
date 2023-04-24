@@ -1,93 +1,105 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const database_1 = require("./database");
 const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
+const knex_1 = require("./database/knex");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
--app.use((0, cors_1.default)());
-app.listen(3003, () => {
-    console.log("Servidor rodando na porta 3003");
-});
-app.get('/ping', (req, res) => {
-    res.send('Pong!');
-});
-app.get('/users', (req, res) => {
-    res.status(200).send(database_1.user);
-});
-app.get('/products', (req, res) => {
-    res.status(200).send(database_1.product);
-});
-app.get('/products/search', (req, res) => {
-    const q = req.query.q;
-    const result = database_1.product.filter((product) => product.name.toLowerCase().includes(q.toLowerCase()));
-    res.status(200).send(result);
-});
-app.post('/users', (req, res) => {
-    const id = req.body.id;
-    const email = req.body.email;
-    const password = req.body.password;
-    const newUser = {
-        id,
-        email,
-        password
-    };
-    database_1.user.push(newUser);
-    res.status(201).send("Cadastro realizado com sucesso");
-});
-app.post('/products', (req, res) => {
-    const id = req.body.id;
-    const name = req.body.name;
-    const price = req.body.price;
-    const category = req.body.category;
-    const newProduct = {
-        id,
-        name,
-        price,
-        category
-    };
-    database_1.product.push(newProduct);
-    res.status(201).send("Produto cadastrado com sucesso");
-});
-app.post('/purchases', (req, res) => {
-    const userId = req.body.userId;
-    const productId = req.body.productId;
-    const quantity = req.body.quantity;
-    const totalPrice = req.body.totalPrice;
-    const newPurchase = {
-        userId,
-        productId,
-        quantity,
-        totalPrice
-    };
-    database_1.purchase.push(newPurchase);
-    res.status(201).send("Compra realizada com sucesso");
-});
-app.get("/product/:id", (req, res) => {
-    const id = req.params.id;
-    const result = database_1.product.find((item) => item.id === id);
-    res.status(200).send("objeto product encontrado");
-});
-app.get("/user/:id/purchase", (req, res) => {
-    const userId = req.params.id;
-    const result = database_1.purchase.find((item) => item.userId === userId);
-    res.status(200).send(result);
-});
-app.delete("/user/:id", (req, res) => {
-    const id = req.params.id;
-    const index = database_1.user.findIndex((item) => item.id === id);
-    database_1.user.splice(index, 1);
-    console.log(database_1.user);
-    res.status(200).send("User apagado com sucesso");
-});
-app.delete("/product/:id", (req, res) => {
-    const id = req.params.id;
-    const index = database_1.product.findIndex((item) => item.id === id);
-    database_1.user.splice(index, 1);
-    console.log(database_1.product);
-    res.status(200).send("User apagado com sucesso");
-});
+app.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield knex_1.db.raw('SELECT * FROM users;');
+        res.status(200).send({ result });
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}));
+app.get("/products", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield knex_1.db.raw('SELECT * FROM products;');
+        res.status(200).send({ result });
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}));
+app.get("/products/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const q = req.query.name;
+        const result = yield knex_1.db.raw(`SELECT * FROM products WHERE LIKE "${q}";`);
+        res.status(200).send({ result });
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}));
+app.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, name, email, password, createdAt } = req.body;
+        if (!id || typeof id !== "string") {
+            res.status(400);
+            throw new Error("'id' deve ser do tipo 'string'");
+        }
+        if (!email || typeof email !== "string") {
+            res.status(400);
+            throw new Error("'email' deve ser do tipo 'string'");
+        }
+        if (!password || typeof password !== "string") {
+            res.status(400);
+            throw new Error("'password' deve ser do tipo 'string'");
+        }
+        const idExist = yield knex_1.db.raw(`SELECT * FROM users WHERE id = ?`, [id]);
+        if (idExist.length > 0) {
+            res.status(400);
+            throw new Error("Já existe uma conta com esse id");
+        }
+        const newUser = yield knex_1.db.raw(`INSERT INTO users (id, name, email, password, createdAt) VALUES (?, ?, ?, ?, ?)`, [id, name, email, password, createdAt]);
+        res.status(200).send({ message: "Cadastro realizado com sucesso!" });
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}));
+app.post("/products", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, name, price, description, imageUrl } = req.body;
+        if (!id || typeof id !== "string") {
+            res.status(400);
+            throw new Error("'id' deve ser do tipo 'string'");
+        }
+        if (!name || typeof name !== "string") {
+            res.status(400);
+            throw new Error("'name' deve ser do tipo 'string'");
+        }
+        if (!price || typeof price !== "number") {
+            res.status(400);
+            throw new Error("'price' deve ser do tipo 'number'");
+        }
+        if (!description || typeof description !== "string") {
+            res.status(400);
+            throw new Error("'descripition' deve ser do tipo 'string'");
+        }
+        const idExist = yield knex_1.db.raw(`SELECT * FROM products WHERE id = ?`, [id]);
+        if (idExist.length > 0) {
+            res.status(400);
+            throw new Error("Já existe um produto com esse id");
+        }
+        const newProduct = yield knex_1.db.raw(`INSERT INTO products (id, name, price, description, imageUrl) VALUES (?, ?, ?, ?, ?)`, [id, name, price, description, imageUrl]);
+        res.status(200).send({ message: "Cadastro realizado com sucesso!" });
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}));
 //# sourceMappingURL=index.js.map
