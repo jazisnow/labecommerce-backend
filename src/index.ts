@@ -597,13 +597,13 @@ try {
     .where({ id })
     .first();
 if (!purchase) {
-        return res.status(404).send("Compra não encontrada");
+        return res.status(404).send("Compra não encontrada!");
     }    
     const buyer = await db("users")
     .where({ id: purchase.buyer })
     .first();
 if (!buyer) {
-        return res.status(404).send("Comprador não encontrado");
+        return res.status(404).send("Comprador não encontrado!");
     }    
       const products = await db("products")
         .join(
